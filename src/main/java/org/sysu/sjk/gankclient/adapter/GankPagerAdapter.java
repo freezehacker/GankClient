@@ -15,8 +15,9 @@ public class GankPagerAdapter extends FragmentPagerAdapter {
 
     List<GankFragment> fragments;
 
-    public GankPagerAdapter(FragmentManager fm) {
+    public GankPagerAdapter(FragmentManager fm, List<GankFragment> inFragments) {
         super(fm);
+        fragments=inFragments;
     }
 
     @Override

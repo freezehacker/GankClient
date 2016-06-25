@@ -4,6 +4,7 @@ import org.sysu.sjk.gankclient.Config;
 import org.sysu.sjk.gankclient.bean.DailyGank;
 import org.sysu.sjk.gankclient.bean.DateList;
 import org.sysu.sjk.gankclient.bean.GankDetail;
+import org.sysu.sjk.gankclient.bean.TypeGank;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -46,6 +47,6 @@ public interface GankService {
      * @return  某个主题下的干货序列，比如Android
      */
     @GET("data/{type}/" + Config.PAGE_SIZE + "/{page}")
-    Observable<DailyGank> getTypeGank(@Path("type") String type,
-                                      @Path("page") int page);
+    Observable<TypeGank> getTypeGank(@Path("type") String type,
+                                     @Path("page") int page);
 }

@@ -4,4 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <org.sysu.sjk.gankclient.ui.widget.MightyRecyclerView
+        android:id="@+id/mighty_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </org.sysu.sjk.gankclient.ui.widget.MightyRecyclerView>
 </LinearLayout>

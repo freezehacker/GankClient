@@ -14,4 +14,6 @@ public class Constant {
     public static final String TYPE_RECOMMEND = "瞎推荐";
     public static final String TYPE_RELAXING_VIDEO = "休息视频";
 
+
+    public static final String URL = "gank_url";
 }

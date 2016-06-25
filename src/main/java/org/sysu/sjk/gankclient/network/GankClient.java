@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.sysu.sjk.gankclient.bean.DailyGank;
+import org.sysu.sjk.gankclient.bean.TypeGank;
 
 import java.util.concurrent.TimeUnit;
 
@@ -73,4 +74,7 @@ public class GankClient {
     /**
      * more API Service below
      */
+    public Observable<TypeGank> getTypeGank(String type, int page) {
+        return mGankService.getTypeGank(type, page);
+    }
 }

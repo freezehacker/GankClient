@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:id="@+id/item_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:ellipsize="marquee"
+        android:maxLines="1"
+        android:text=" >> 实现1-7阶贝塞尔曲线的形成动画"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/item_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="marquee"
+        android:maxLines="1"
+        android:text="\@大熊"
+        android:textColor="@color/secondaryTextColor"
+        android:textSize="14sp" />
 
 </LinearLayout>
