@@ -3,4 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--自定义调色板-->
+    <color name="darkPrimaryColor">#0288D1</color>
+    <color name="primaryColor">#03A9F4</color>
+    <color name="lightPrimaryColor">#B3E5FC</color>
+    <color name="bgTextColor">#FFFFFF</color>
+    <color name="accentColor">#009688</color>
+    <color name="primaryTextColor">#212121</color>
+    <color name="secondaryTextColor">#727272</color>
+    <color name="dividerColor">#B6B6B6</color>
 </resources>

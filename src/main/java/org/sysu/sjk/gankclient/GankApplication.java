@@ -14,7 +14,9 @@ public class GankApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = this;
-        //...
+        /**
+         * 某些工具比如Glide的初始化
+         */
     }
 
     public static Context getGlobalContext() {

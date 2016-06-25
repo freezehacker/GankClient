@@ -9,7 +9,6 @@ import android.os.Parcelable;
  */
 public class Gank extends BaseBean implements Parcelable {
 
-
     /**
      * _id : 56cc6d23421aa95caa707a69
      * createdAt : 2015-08-06T07:15:52.65Z
