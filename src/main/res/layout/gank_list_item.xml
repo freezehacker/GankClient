@@ -3,30 +3,28 @@
     android:id="@+id/item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/item_padding_v"
+    android:paddingLeft="@dimen/item_padding_h"
+    android:paddingRight="@dimen/item_padding_h"
+    android:paddingTop="@dimen/item_padding_v">
 
     <TextView
-        android:id="@+id/item_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:ellipsize="marquee"
-        android:maxLines="1"
-        android:text=" >> 实现1-7阶贝塞尔曲线的形成动画"
+        android:text="*"
+        android:textSize="18sp"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
         android:textColor="@color/primaryTextColor"
-        android:textSize="18sp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/item_author"
+        android:id="@+id/item_primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="6dp"
-        android:ellipsize="marquee"
-        android:maxLines="1"
-        android:text="\@大熊"
-        android:textColor="@color/secondaryTextColor"
-        android:textSize="14sp" />
+        android:text="实现1-7阶贝塞尔曲线的形成动画 by某人"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="15sp" />
 
 </LinearLayout>

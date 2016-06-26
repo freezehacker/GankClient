@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/web_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--跑马灯效果需要设置：singleLine、focusable、focusableInTouchMode-->
+        <TextView xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/web_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:textColor="@color/bgTextColor"
+            android:textSize="18sp"
+            tools:text="这是一个gank的标题" />
+    </android.support.v7.widget.Toolbar>
+
+    <ProgressBar
+        android:id="@+id/web_loading_progress_bar"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0"
+        android:visibility="visible" />
 
     <WebView
-        android:id="@+id/wv_gank_content"
+        android:id="@+id/web_gank_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></WebView>
 </LinearLayout>

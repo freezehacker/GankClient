@@ -9,5 +9,9 @@
 
     <style name="MyAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--各种过渡动画-->
+        <!--颜色板-->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/darkPrimaryColor</item>
+        <item name="colorAccent">@color/accentColor</item>
     </style>
 </resources>

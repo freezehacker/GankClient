@@ -5,12 +5,17 @@
     <color name="colorAccent">#FF4081</color>
 
     <!--自定义调色板-->
-    <color name="darkPrimaryColor">#0288D1</color>
-    <color name="primaryColor">#03A9F4</color>
-    <color name="lightPrimaryColor">#B3E5FC</color>
+    <color name="darkPrimaryColor">#1976d2</color>
+    <color name="primaryColor">#2196f3</color>
+    <color name="lightPrimaryColor">#bbdefb</color>
     <color name="bgTextColor">#FFFFFF</color>
-    <color name="accentColor">#009688</color>
+    <color name="accentColor">#FF5252</color>
     <color name="primaryTextColor">#212121</color>
     <color name="secondaryTextColor">#727272</color>
     <color name="dividerColor">#B6B6B6</color>
+
+    <color name="grey_200">#eeeeee</color>
+    <color name="grey_300">#e0e0e0</color>
+    <color name="grey_400">#bdbdbd</color>
+    <color name="grey_500">#9e9e9e</color>
 </resources>

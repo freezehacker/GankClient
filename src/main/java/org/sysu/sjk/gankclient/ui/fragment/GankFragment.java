@@ -84,9 +84,8 @@ public class GankFragment extends BaseFragment {
         recycler.setOnItemClickListener(new MightyRecyclerView.GankListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), GankDetailActivity.class);
-                intent.putExtra(Constant.URL, gankList.get(position).getUrl());
-                startActivity(intent);
+                Gank gank = gankList.get(position);
+                GankDetailActivity.start(getActivity(), gank.getUrl(), gank.getDesc());
             }
         });
         recycler.setOnLoadMoreListener(new MightyRecyclerView.OnLoadMoreListener() {
@@ -120,6 +119,7 @@ public class GankFragment extends BaseFragment {
             public void onRefresh() {
                 GankClient.getInstance().getTypeGank(mType, mPage)
                         .subscribeOn(Schedulers.io())
+                        .unsubscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Action1<TypeGank>() {
                             @Override
@@ -137,11 +137,22 @@ public class GankFragment extends BaseFragment {
                         }, new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                recycler.closeRefresh();
                                 LogUtils.log(throwable.getMessage());
                             }
                         });
             }
         });
+        recycler.setRefreshingColors(R.color.primaryColor);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        /**
+         * 一开始就刷新
+         */
+        recycler.autoRefreshInTheBeginning();
     }
 
     @Override

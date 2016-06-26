@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.sysu.sjk.gankclient.R;
 import org.sysu.sjk.gankclient.bean.Gank;
+import org.sysu.sjk.gankclient.utils.SpannableUtils;
 
 import java.util.List;
 import java.util.zip.Inflater;
@@ -26,6 +27,7 @@ public class MightyRecyclerView extends LinearLayout {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager llm;    // 方法findLastVisibleItemPosition()
     public SwipeRefreshLayout mSwipeRefreshLayout;  // public
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener;
     private List<Gank> gankList;
     private GankListAdapter adapter;
 
@@ -42,7 +44,6 @@ public class MightyRecyclerView extends LinearLayout {
         mRecyclerView.setLayoutManager(llm);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) parentView.findViewById(R.id.custom_srl);
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.darkPrimaryColor);
     }
 
     public void setListRef(List<Gank> ref) {
@@ -51,8 +52,35 @@ public class MightyRecyclerView extends LinearLayout {
         mRecyclerView.setAdapter(adapter);
     }
 
+    /**
+     * 关闭刷新的进度条
+     */
     public void closeRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * 一开始的刷新
+     */
+    public void autoRefreshInTheBeginning() {
+        if (mOnRefreshListener == null) {
+            throw new IllegalArgumentException("刷新监听器\"OnRefreshListener\"未定义!");
+        }
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                mOnRefreshListener.onRefresh();
+            }
+        });
+    }
+
+    /**
+     * 设置刷新进度条颜色
+     * @param colorIds
+     */
+    public void setRefreshingColors(int... colorIds) {
+        mSwipeRefreshLayout.setColorSchemeResources(colorIds);
     }
 
     public void setOnItemClickListener(GankListAdapter.OnItemClickListener listener) {
@@ -77,6 +105,7 @@ public class MightyRecyclerView extends LinearLayout {
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
+        mOnRefreshListener = listener;
         mSwipeRefreshLayout.setOnRefreshListener(listener);
     }
 
@@ -122,8 +151,7 @@ public class MightyRecyclerView extends LinearLayout {
         @Override
         public void onBindViewHolder(GankListViewHolder holder, final int position) {
             Gank gank = gankList.get(position);
-            holder.itemTitle.setText(gank.getDesc());
-            holder.itemAuthor.setText(gank.getWho());
+            holder.itemPrimary.setText(SpannableUtils.getGankStr(gank));
 
             if (null != onItemClickListener) {
                 holder.itemContainer.setOnClickListener(new OnClickListener() {
@@ -152,15 +180,12 @@ public class MightyRecyclerView extends LinearLayout {
         public static class GankListViewHolder extends RecyclerView.ViewHolder {
 
             LinearLayout itemContainer;
-            TextView itemTitle;
-            TextView itemAuthor;
-            TextView itemDate;
+            TextView itemPrimary;
 
             public GankListViewHolder(View itemView) {
                 super(itemView);
                 itemContainer = (LinearLayout) itemView.findViewById(R.id.item_container);
-                itemTitle = (TextView) itemView.findViewById(R.id.item_title);
-                itemAuthor = (TextView) itemView.findViewById(R.id.item_author);
+                itemPrimary = (TextView) itemView.findViewById(R.id.item_primary);
             }
         }
     }

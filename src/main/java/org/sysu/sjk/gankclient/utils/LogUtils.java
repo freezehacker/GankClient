@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class LogUtils {
 
-    public static final String TAG = "JK";
+    public static final String TAG = "what";
 
     public static void log(String sentence) {
         if (null == sentence) {

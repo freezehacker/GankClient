@@ -49,11 +49,21 @@ public class GankActivity extends BaseActivity {
         gankFragmentList.add(GankFragment.newInstance(Constant.TYPE_ANDROID));
         gankFragmentList.add(GankFragment.newInstance(Constant.TYPE_IOS));
         gankFragmentList.add(GankFragment.newInstance(Constant.TYPE_FRONT_END));
-        //...
+        gankFragmentList.add(GankFragment.newInstance(Constant.TYPE_RECOMMEND));
+        gankFragmentList.add(GankFragment.newInstance(Constant.TYPE_EXTEND));
+        //还有两种media型的...
 
         fragmentPagerAdapter = new GankPagerAdapter(getSupportFragmentManager(), gankFragmentList);
         viewPager.setAdapter(fragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        configTabLayout();
+    }
+
+    private void configTabLayout() {
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+        tabLayout.setTabTextColors(getResources().getColor(R.color.grey_300),
+                getResources().getColor(R.color.bgTextColor));
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.accentColor));
     }
 }
