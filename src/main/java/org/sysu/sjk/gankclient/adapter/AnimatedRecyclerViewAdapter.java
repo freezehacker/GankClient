@@ -42,7 +42,7 @@ public class AnimatedRecyclerViewAdapter<T extends RecyclerView.ViewHolder>
      * @param position
      */
     public void showAnimationForEachItem(final View view, int position) {
-        if (position > lastItemPos) {
+        /*if (position > lastItemPos) {
             view.setAlpha(0.0f);
             final Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.right_in);
             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -68,6 +68,6 @@ public class AnimatedRecyclerViewAdapter<T extends RecyclerView.ViewHolder>
                 }
             }, DELAY * position);
             lastItemPos = position;
-        }
+        }*/
     }
 }

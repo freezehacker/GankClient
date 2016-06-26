@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,9 @@ import android.widget.TextView;
 import org.sysu.sjk.gankclient.R;
 import org.sysu.sjk.gankclient.adapter.AnimatedRecyclerViewAdapter;
 import org.sysu.sjk.gankclient.bean.Gank;
+import org.sysu.sjk.gankclient.ui.activity.GankDetailActivity;
 import org.sysu.sjk.gankclient.utils.SpannableUtils;
+import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.zip.Inflater;
@@ -49,6 +53,7 @@ public class MightyRecyclerView extends LinearLayout {
 
     /**
      * 建立List的引用联系，该引用一直不变，为了让notifyDatasetChanged()一直有效
+     *
      * @param ref
      */
     public void setListRef(List<Gank> ref) {
@@ -82,6 +87,7 @@ public class MightyRecyclerView extends LinearLayout {
 
     /**
      * 设置刷新进度条颜色
+     *
      * @param colorIds
      */
     public void setRefreshingColors(int... colorIds) {
@@ -135,42 +141,98 @@ public class MightyRecyclerView extends LinearLayout {
     /**
      * RecyclerView的适配器
      */
-    public static class GankListAdapter extends AnimatedRecyclerViewAdapter<GankListAdapter.GankListViewHolder> {
+    public static class GankListAdapter extends AnimatedRecyclerViewAdapter<RecyclerView.ViewHolder> {
 
-        Context context;
+        public static final int ITEM_TYPE_NORMAL = 0;
+        public static final int ITEM_TYPE_EXTEND = 1;
+
+        private String lastDate = "";
+        private int lastPos = -1;
+
+        LayoutInflater layoutInflater;
         List<Gank> gankList;
         OnItemClickListener onItemClickListener;
 
         public GankListAdapter(Context context, List<Gank> inList) {
-            this.context = context;
             this.gankList = inList;
+            this.layoutInflater = LayoutInflater.from(context);
+        }
+
+        // 截取createdAt字段的日期部分
+        private String getDateStr(Gank gank) {
+            //return gank.getCreatedAt().substring(0, 10);
+            return gank.getPublishedAt().substring(0, 10);
         }
 
         @Override
-        public GankListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.gank_list_item, parent, false);
-            GankListViewHolder ret = new GankListViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            RecyclerView.ViewHolder ret;
+            if (viewType == ITEM_TYPE_EXTEND) {
+                View view = layoutInflater.inflate(R.layout.gank_list_item_extend, parent, false);
+                ret = new GankListExtendViewHolder(view);
+            } else {
+                View view = layoutInflater.inflate(R.layout.gank_list_item, parent, false);
+                ret = new GankListNormalViewHolder(view);
+            }
             return ret;
         }
 
         @Override
-        public void onBindViewHolder(GankListViewHolder holder, final int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             Gank gank = gankList.get(position);
-            holder.itemPrimary.setText(SpannableUtils.getGankStr(gank));
-            showAnimationForEachItem(holder.itemPrimary, position);
-            if (null != onItemClickListener) {
-                holder.itemContainer.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onItemClickListener.onItemClick(v, position);
-                    }
-                });
+            if (holder instanceof GankListExtendViewHolder) {
+                GankListExtendViewHolder extendViewHolder = (GankListExtendViewHolder) holder;
+                // 多了一个header
+                extendViewHolder.itemExtend.setText(getDateStr(gank));
+                extendViewHolder.itemPrimary.setText(SpannableUtils.getGankStr(gank));
+                if (onItemClickListener != null) {
+                    extendViewHolder.itemContainer.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onItemClickListener.onItemClick(v, position);
+                        }
+                    });
+                }
+                showAnimationForEachItem(extendViewHolder.itemPrimary, position);
+            } else {
+                GankListNormalViewHolder normalViewHolder = (GankListNormalViewHolder) holder;
+                normalViewHolder.itemPrimary.setText(SpannableUtils.getGankStr(gank));
+                if (onItemClickListener != null) {
+                    normalViewHolder.itemContainer.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onItemClickListener.onItemClick(v, position);
+                        }
+                    });
+                }
+                showAnimationForEachItem(normalViewHolder.itemPrimary, position);
             }
         }
 
         @Override
         public int getItemCount() {
             return gankList.size();
+        }
+
+        /**
+         * 根据日期来决定，要不要显示日期
+         *
+         * @param position
+         * @return
+         */
+        @Override
+        public int getItemViewType(final int position) {
+            String gankDate = getDateStr(gankList.get(position));
+            if (position > lastPos && !TextUtils.equals(gankDate, lastDate)) {
+                /**
+                 * 改变
+                 */
+                lastPos = position;
+                lastDate = gankDate;
+                return ITEM_TYPE_EXTEND;
+            } else {
+                return ITEM_TYPE_NORMAL;
+            }
         }
 
         public void setOnItemClickListener(OnItemClickListener listener) {
@@ -181,16 +243,25 @@ public class MightyRecyclerView extends LinearLayout {
             void onItemClick(View view, int position);
         }
 
-        // item承载器
-        public static class GankListViewHolder extends RecyclerView.ViewHolder {
-
+        // 没有header的
+        public static class GankListNormalViewHolder extends RecyclerView.ViewHolder {
             LinearLayout itemContainer;
             TextView itemPrimary;
 
-            public GankListViewHolder(View itemView) {
+            public GankListNormalViewHolder(View itemView) {
                 super(itemView);
                 itemContainer = (LinearLayout) itemView.findViewById(R.id.item_container);
                 itemPrimary = (TextView) itemView.findViewById(R.id.item_primary);
+            }
+        }
+
+        // 有header的
+        public static class GankListExtendViewHolder extends GankListNormalViewHolder {
+            TextView itemExtend;
+
+            public GankListExtendViewHolder(View itemView) {
+                super(itemView);
+                itemExtend = (TextView) itemView.findViewById(R.id.item_extend);
             }
         }
     }
