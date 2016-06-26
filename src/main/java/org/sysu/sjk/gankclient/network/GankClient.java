@@ -21,7 +21,7 @@ import rx.Observable;
 public class GankClient {
 
     public static final String BASE_URL = "http://gank.io/api/";
-    public static final int CONNECT_TIMEOUT = 5;
+    public static final int CONNECT_TIMEOUT = 10;
 
     private Retrofit mRetrofit;
     private GankService mGankService;

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.sysu.sjk.gankclient.R;
+import org.sysu.sjk.gankclient.adapter.AnimatedRecyclerViewAdapter;
 import org.sysu.sjk.gankclient.bean.Gank;
 import org.sysu.sjk.gankclient.utils.SpannableUtils;
 
@@ -46,6 +47,10 @@ public class MightyRecyclerView extends LinearLayout {
         mSwipeRefreshLayout = (SwipeRefreshLayout) parentView.findViewById(R.id.custom_srl);
     }
 
+    /**
+     * 建立List的引用联系，该引用一直不变，为了让notifyDatasetChanged()一直有效
+     * @param ref
+     */
     public void setListRef(List<Gank> ref) {
         gankList = ref;
         adapter = new GankListAdapter(mContext, gankList);
@@ -130,7 +135,7 @@ public class MightyRecyclerView extends LinearLayout {
     /**
      * RecyclerView的适配器
      */
-    public static class GankListAdapter extends RecyclerView.Adapter<GankListAdapter.GankListViewHolder> {
+    public static class GankListAdapter extends AnimatedRecyclerViewAdapter<GankListAdapter.GankListViewHolder> {
 
         Context context;
         List<Gank> gankList;
@@ -152,7 +157,7 @@ public class MightyRecyclerView extends LinearLayout {
         public void onBindViewHolder(GankListViewHolder holder, final int position) {
             Gank gank = gankList.get(position);
             holder.itemPrimary.setText(SpannableUtils.getGankStr(gank));
-
+            showAnimationForEachItem(holder.itemPrimary, position);
             if (null != onItemClickListener) {
                 holder.itemContainer.setOnClickListener(new OnClickListener() {
                     @Override

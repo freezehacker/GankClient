@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 /**
  * Created by sjk on 2016/6/24.
@@ -16,6 +17,8 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment {
 
     protected View mView;
+    protected Subscription mSubscriptionRefresh, mSubscriptionLoadMore;
+
     protected abstract int getLayoutId();
 
     @Override
@@ -51,6 +54,14 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        if (mSubscriptionLoadMore != null) {
+            mSubscriptionLoadMore.unsubscribe();
+            mSubscriptionLoadMore = null;
+        }
+        if (mSubscriptionRefresh != null) {
+            mSubscriptionRefresh.unsubscribe();
+            mSubscriptionRefresh = null;
+        }
         super.onDestroy();
     }
 }

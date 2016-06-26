@@ -26,8 +26,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Scheduler;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -91,25 +93,37 @@ public class GankFragment extends BaseFragment {
         recycler.setOnLoadMoreListener(new MightyRecyclerView.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                GankClient.getInstance().getTypeGank(mType, mPage)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<TypeGank>() {
+                mSubscriptionLoadMore = GankClient.getInstance().getTypeGank(mType, mPage)
+                        .map(new Func1<TypeGank, List<Gank>>() {
                             @Override
-                            public void call(TypeGank typeGank) {
+                            public List<Gank> call(TypeGank typeGank) {
                                 List<Gank> ganks = typeGank.getResults();
                                 if (ganks == null || ganks.size() == 0) {
-                                    LogUtils.log("no more");
-                                } else {
-                                    Toast.makeText(getActivity(), "Load OK!", Toast.LENGTH_SHORT).show();
-                                    recycler.loadMoreItems(ganks);
-                                    ++mPage;    // 下次要加载下一页
+                                    throw new IllegalStateException("加载得到的列表为空");
                                 }
+                                return ganks;
                             }
-                        }, new Action1<Throwable>() {
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<List<Gank>>() {
                             @Override
-                            public void call(Throwable throwable) {
-                                LogUtils.log(throwable.getMessage());
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                LogUtils.log("加载出错");
+                                LogUtils.log(e.getMessage());
+                            }
+
+                            @Override
+                            public void onNext(List<Gank> ganks) {
+                                ++mPage;
+                                recycler.loadMoreItems(ganks);
+                                Toast.makeText(getActivity(), "Load More OK!", Toast.LENGTH_SHORT).show();
                             }
                         });
             }
@@ -117,28 +131,38 @@ public class GankFragment extends BaseFragment {
         recycler.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                GankClient.getInstance().getTypeGank(mType, mPage)
+                mSubscriptionRefresh = GankClient.getInstance().getTypeGank(mType, mPage)
+                        .map(new Func1<TypeGank, List<Gank>>() {
+                            @Override
+                            public List<Gank> call(TypeGank typeGank) {
+                                List<Gank> ganks = typeGank.getResults();
+                                if (ganks == null || ganks.size() == 0) {
+                                    throw new IllegalStateException("刷新得到的列表为空");
+                                }
+                                return ganks;
+                            }
+                        })
                         .subscribeOn(Schedulers.io())
                         .unsubscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<TypeGank>() {
+                        .subscribe(new Subscriber<List<Gank>>() {
                             @Override
-                            public void call(TypeGank typeGank) {
-                                List<Gank> ganks = typeGank.getResults();
-                                if (ganks == null || ganks.size() == 0) {
-                                    LogUtils.log("empty");
-                                } else {
-                                    recycler.closeRefresh();
-                                    Toast.makeText(getActivity(), "Refresh!", Toast.LENGTH_SHORT).show();
-                                    recycler.refreshItems(ganks);
-                                    mPage = 1;  // 重新回到第1页
-                                }
+                            public void onCompleted() {
+
                             }
-                        }, new Action1<Throwable>() {
+
                             @Override
-                            public void call(Throwable throwable) {
+                            public void onError(Throwable e) {
+                                LogUtils.log("Refresh出错");
+                                LogUtils.log(e.getMessage());
+                            }
+
+                            @Override
+                            public void onNext(List<Gank> ganks) {
+                                recycler.refreshItems(ganks);
                                 recycler.closeRefresh();
-                                LogUtils.log(throwable.getMessage());
+                                mPage = 1;
+                                Toast.makeText(getActivity(), "Refresh OK!", Toast.LENGTH_SHORT).show();
                             }
                         });
             }
